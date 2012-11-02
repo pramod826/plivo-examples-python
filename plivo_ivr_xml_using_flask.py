@@ -9,7 +9,7 @@ def getdigits():
     if request.method == 'GET':
         digits = request.args.get('Digits', '')
     elif request.method == 'POST':
-        digits = request.args.get('Digits', '')
+        digits = request.form.get('Digits', '')
     
     resp = plivo.Response()
     if digits:
