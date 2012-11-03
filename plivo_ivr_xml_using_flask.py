@@ -1,6 +1,7 @@
 from flask import Flask, Response, request, make_response
 import plivo
 import os
+import cgi
 
 app = Flask(__name__)
 
@@ -9,14 +10,16 @@ def getdigits():
     if request.method == 'GET':
         digits = request.args.get('Digits', '')
     elif request.method == 'POST':
-        digits = request.form['Digits']
+        digits = request.form.get('Digits', '')
     
     resp = plivo.Response()
     if digits:
         if digits == '1':
             resp.addSpeak("Hello, welcome to Plivo's demo app")
         else:
-            resp.addSpeak('Hola, bienvenido a la aplicaci&#65533;n de demostraci&#65533;n Plivo', language='es-ES')
+            ## convert the accented characters to html entities
+            text = cgi.escape('Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
+            resp.addSpeak(text=text, language='es-ES')
     else:
         resp.addSpeak('No input received')
 
