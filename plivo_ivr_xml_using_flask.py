@@ -18,7 +18,7 @@ def getdigits():
             resp.addSpeak("Hello, welcome to Plivo's demo app")
         else:
             ## convert the accented characters to html entities
-            text = cgi.escape('Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
+            text = cgi.escape(u'Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
             resp.addSpeak(text=text, language='es-ES')
     else:
         resp.addSpeak('No input received')
