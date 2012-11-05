@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+## Above line is to confirm that unicode Non-ASCII charcters would be included
 from flask import Flask, Response, request, make_response
 import plivo
 import os
@@ -18,8 +20,9 @@ def getdigits():
             resp.addSpeak("Hello, welcome to Plivo's demo app")
         else:
             ## convert the accented characters to html entities
-            text = cgi.escape(u'Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
-            resp.addSpeak(text=text, language='es-ES')
+            #text = cgi.escape(u'Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
+            text = u'Wie heißt du ? Sie weiß nicht ? Ich heiße Plivo.'
+            resp.addSpeak(body=convert(text), language='es-ES')
     else:
         resp.addSpeak('No input received')
 
@@ -54,6 +57,10 @@ def digits():
     ret_response = make_response(response.to_xml())
     ret_response.headers["Content-type"] = "text/xml"
     return ret_response
+
+def convert(inputfromuser):
+    print inputfromuser
+    return ''.join((c for c in unicodedata.normalize('NFD', inputfromuser) if unicodedata.category(c) != 'Mn'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
