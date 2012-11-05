@@ -51,7 +51,7 @@ def digits():
     response = plivo.Response()
     getdigits = plivo.GetDigits(**params)
     getdigits.addSpeak(body="Press 1 for English.")
-    getdigits.addSpeak(body="Press 2 for Spanish.")
+    getdigits.addSpeak(body="Press 2 for German.")
     response.add(getdigits)
     response.addSpeak(body="Input not received. Thank you.")
     ret_response = make_response(response.to_xml())
