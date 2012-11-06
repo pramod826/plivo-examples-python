@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 ## Above line is to confirm that unicode Non-ASCII charcters would be included
+## in this file
 from flask import Flask, Response, request, make_response
 import plivo
 import os
 import cgi
+import sys
 
 app = Flask(__name__)
 
 @app.route('/getdigits/', methods=['GET', 'POST'])
 def getdigits():
+    ## import ipdb; import ipdb
     if request.method == 'GET':
         digits = request.args.get('Digits', '')
     elif request.method == 'POST':
@@ -20,9 +23,11 @@ def getdigits():
             resp.addSpeak("Hello, welcome to Plivo's demo app")
         else:
             ## convert the accented characters to html entities
-            #text = cgi.escape(u'Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
-            text = u'Wie heißt du ? Sie weiß nicht ? Ich heiße Plivo.'
-            resp.addSpeak(body=convert(text), language='es-ES')
+            text = cgi.escape(u'Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
+            resp.addSpeak(body=text, language='es-ES', loop=0)
+            ## text = cgi.escape(u'Wie heißt du? Sie weiß nicht? Ich heiße Plivo').encode('ascii', 'xmlcharrefreplace')
+            ## resp.addSpeak(body=text, language='de-DE')
+
     else:
         resp.addSpeak('No input received')
 
@@ -51,17 +56,14 @@ def digits():
     response = plivo.Response()
     getdigits = plivo.GetDigits(**params)
     getdigits.addSpeak(body="Press 1 for English.")
-    getdigits.addSpeak(body="Press 2 for German.")
+    getdigits.addSpeak(body="Press 2 for Spanish.")
+    ## getdigits.addSpeak(body="Press 2 for German.")
     response.add(getdigits)
     response.addSpeak(body="Input not received. Thank you.")
     ret_response = make_response(response.to_xml())
     ret_response.headers["Content-type"] = "text/xml"
     return ret_response
 
-def convert(inputfromuser):
-    print inputfromuser
-    return ''.join((c for c in unicodedata.normalize('NFD', inputfromuser) if unicodedata.category(c) != 'Mn'))
-
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+        port = int(os.environ.get('PORT', 5000))
+        app.run(host='0.0.0.0', port=port, debug=True)
