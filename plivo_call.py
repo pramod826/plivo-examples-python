@@ -14,7 +14,7 @@ params = {
     'answer_url' : "http://example.com/answer_url",
     'hangup_url' : "http://example.herokuapp.com/hangup_url",
 }
-response = p.make_call(call_params)
+response = p.make_call(params)
 
 # Hangup Call
 params = {
