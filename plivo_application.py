@@ -33,7 +33,7 @@ response = p.delete_application(params)
 
 # Create subaccount application
 params = {
-    'subauth_id' : ' XXXXXXXXXXXX',
+    'subaccount' : ' XXXXXXXXXXXX',
     'app_name' : 'Gimli the dwarf',
     'answer_url' : 'http://example.com/answer_url',
     'answer_method' : 'POST',
@@ -42,4 +42,4 @@ params = {
     'fallback_url' : 'http://example.com/fallback_url',
     'fallback_method' : 'POST',
 }
-response = p.create_subaccount_application(params)
+response = p.create_application(params)
