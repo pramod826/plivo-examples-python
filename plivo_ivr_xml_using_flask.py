@@ -1,17 +1,18 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ## Above line is to confirm that unicode Non-ASCII charcters would be included
 ## in this file
-from flask import Flask, Response, request, make_response
+#
+
+from flask import Flask, request, make_response
 import plivo
 import os
-import cgi
 import sys
 
 app = Flask(__name__)
 
 @app.route('/getdigits/', methods=['GET', 'POST'])
 def getdigits():
-    ## import ipdb; import ipdb
     if request.method == 'GET':
         digits = request.args.get('Digits', '')
     elif request.method == 'POST':
@@ -20,14 +21,14 @@ def getdigits():
     resp = plivo.Response()
     if digits:
         if digits == '1':
-            resp.addSpeak("Hello, welcome to Plivo's demo app")
+            text = u'This is a demo app'
+            resp.addSpeak(body=text, language='en-US')
+        elif digits == '2':
+            text = u'Dies ist eine Demo-Anwendung.'
+            resp.addSpeak(body=text, language='de-DE')
         else:
-            ## convert the accented characters to html entities
-            text = cgi.escape(u'Hola, bienvenido a la aplicación de demostración Plivo').encode('ascii', 'xmlcharrefreplace')
-            resp.addSpeak(body=text, language='es-ES', loop=0)
-            ## text = cgi.escape(u'Wie heißt du? Sie weiß nicht? Ich heiße Plivo').encode('ascii', 'xmlcharrefreplace')
-            ## resp.addSpeak(body=text, language='de-DE')
-
+            text = u'Άγνωστη εισόδου'
+            resp.addSpeak(body=text, language='el-GR')
     else:
         resp.addSpeak('No input received')
 
@@ -37,7 +38,8 @@ def getdigits():
 
 @app.route('/digits/', methods=['GET'])
 def digits():
-    action = request.args.get('action', 'http://domain.name/getdigits/')
+    #import ipdb; ipdb.set_trace()
+    action = request.args.get('action', 'http://' + request.environ['SERVER_NAME'] + '/getdigits/')
     method = request.args.get('method', 'GET')
     timeout = request.args.get('timeout', '')
     retries = request.args.get('retries', '')
@@ -55,9 +57,8 @@ def digits():
         params['numDigits'] = numdigits
     response = plivo.Response()
     getdigits = plivo.GetDigits(**params)
-    getdigits.addSpeak(body="Press 1 for English.")
-    getdigits.addSpeak(body="Press 2 for Spanish.")
-    ## getdigits.addSpeak(body="Press 2 for German.")
+    getdigits.addSpeak(body="Press one for English.")
+    getdigits.addSpeak(body="Press two for German.")
     response.add(getdigits)
     response.addSpeak(body="Input not received. Thank you.")
     ret_response = make_response(response.to_xml())
