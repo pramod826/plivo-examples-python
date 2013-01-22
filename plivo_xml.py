@@ -38,3 +38,7 @@ Output:
     <Redirect method="POST">http://example.com/redirect</Redirect>
     </Response>
 """
+d = r.addDial(callerId=_from, callerName=cname)
+d.addNumber(to)
+response = make_response(r.to_xml())
+
