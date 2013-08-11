@@ -4,7 +4,7 @@
 ## in this file
 #
 
-from flask import Flask, request, make_response
+from flask import Flask, request,Response
 import plivo
 import os
 import sys
@@ -18,7 +18,7 @@ def getdigits():
     elif request.method == 'POST':
         digits = request.form.get('Digits', '')
     
-    resp = plivo.Response()
+    resp = plivo.XML.Response()
     if digits:
         if digits == '1':
             text = u'This is a demo app'
@@ -32,8 +32,7 @@ def getdigits():
     else:
         resp.addSpeak('No input received')
 
-    ret_response = make_response(resp.to_xml())
-    ret_response.headers["Content-type"] = "text/xml"
+    ret_response = Response(resp.to_xml(),mimetype='text/xml')
     return ret_response
 
 @app.route('/digits/', methods=['GET'])
@@ -55,14 +54,13 @@ def digits():
         params['finishOnKey'] = finishonkey
     if numdigits:
         params['numDigits'] = numdigits
-    response = plivo.Response()
-    getdigits = plivo.GetDigits(**params)
+    response = plivo.XML.Response()
+    getdigits = plivo.XML.GetDigits(**params)
     getdigits.addSpeak(body="Press one for English.")
     getdigits.addSpeak(body="Press two for German.")
     response.add(getdigits)
     response.addSpeak(body="Input not received. Thank you.")
-    ret_response = make_response(response.to_xml())
-    ret_response.headers["Content-type"] = "text/xml"
+	ret_response = Response(response.to_xml(),mimetype='text/xml')
     return ret_response
 
 if __name__ == '__main__':
