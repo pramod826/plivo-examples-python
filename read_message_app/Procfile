@@ -1,0 +1,1 @@
+web: gunicorn read_message:app
