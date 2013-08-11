@@ -20,7 +20,7 @@ def response_sip_route():
     else:
         return make_response('Method not allowed.')
 
-    response = plivo.Response()
+    response = plivo.XML.Response()
     if not to_number:
         response.addHangup()
     else:
@@ -29,10 +29,8 @@ def response_sip_route():
         else:
             response.addDial(callerId=from_number).addNumber(to_number)
 
-    response = make_response(response.to_xml())
-    response.headers['Content-Type'] = 'text/xml'
-
-    return response
+    return Response(response.to_xml(),mimetype='text/xml')
+    
 
 if __name__ == '__main__':
        app.run(host='0.0.0.0')
