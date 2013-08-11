@@ -5,18 +5,20 @@ app = Flask(__name__)
 
 @app.route('/getdigits',methods=['GET','POST'])
 def getdigits():
-	if request.method == 'GET':
-		digits=request.args.get('Digits','')
-	elif request.method == 'POST':
-		digits=request.args.get('Digits','')
+    if request.method == 'GET':
+        digits=request.args.get('Digits','')
 
-	xml=plivo.XML.Response()
-	if digits:
-		xml.addSpeak('You have Pressed '+ str(digits))
-	else:
-		xml.addSpeak('You have not pressd any digit')
+    elif request.method == 'POST':
+        if 'Digits' in request.form:
+            digits=request.args.get('Digits','')
 
-	return Response(xml.to_xml(),mimetype='text/xml')
+    xml=plivo.XML.Response()
+    if digits:
+        xml.addSpeak('You have Pressed '+ str(digits))
+    else:
+        xml.addSpeak('You have not pressd any digit')
+
+    return Response(xml.to_xml(),mimetype='text/xml')
  
 
 if __name__ == '__main__':
