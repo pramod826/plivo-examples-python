@@ -1,0 +1,1 @@
+web: gunicorn speak_digit:app
