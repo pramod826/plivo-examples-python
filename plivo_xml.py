@@ -1,7 +1,6 @@
 import plivo
 
-
-r = plivo.Response()
+r = plivo.XML.Response()
 
 
 # Add speak
@@ -27,7 +26,7 @@ Output:
 """
 
 
-r = plivo.Response()
+r = plivo.XML.Response()
 url = 'http://example.com/redirect'
 params = {'method':'POST'}
 r.addRedirect(url, **params)
@@ -38,7 +37,12 @@ Output:
     <Redirect method="POST">http://example.com/redirect</Redirect>
     </Response>
 """
-d = r.addDial(callerId=_from, callerName=cname)
+d=r.addDial(callerId=_from, callerName=cname)
 d.addNumber(to)
-response = make_response(r.to_xml())
+'''
+to return these response as xml
+'''
+from falsk import Response
+response=Response(r.to_xml(),mimetype='text/xml')
+return response
 
