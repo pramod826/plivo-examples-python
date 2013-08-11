@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import Flask, request,Response
 import plivo
 import os
 
@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/conf-get-input/', methods=['GET', 'POST'])
 def conf_get_input():
-    response = plivo.Response()
+    response = plivo.XML.Response()
     repsonse.addSpeak('If you know your conference pin, please enter')
     getdigits = response.addGetDigits(
         action='http://' + SERVER_NAME + '/getdigits/',
@@ -17,8 +17,7 @@ def conf_get_input():
         finishOnKey='#'
     )
     response.addSpeak(body="Input not received. Thank you.")
-    xml_response = make_response(response.to_xml())
-    xml_response.headers["Content-type"] = "text/xml"
+    xml_response=Response(response.to_xml(),mimetype='text/xml')
     return xml_response
 
 @app.route('/conf-verify-input/', methods=['GET', 'POST'])
@@ -28,7 +27,7 @@ def conf_verify_input():
     elif request.method == 'POST':
         user_input = request.form.get('Digits', '')
         
-    response = plivo.Response()
+    response = plivo.XML.Response()
     if CONF_CODE != 'Digits':
         response.addSpeak('There is no conference running with the given code.')
         response.addHangup()
@@ -39,8 +38,7 @@ def conf_verify_input():
             callbackUrl='http://' + SERVER_NAME + '/conf-callback/'
         )
 
-    xml_response = make_response(response.to_xml())
-    xml_response.headers["Content-type"] = "text/xml"
+    xml_response = Response(response.to_xml(),mimetype='text/xml')
     return xml_response
 
 if __name__ == '__main__':
