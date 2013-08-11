@@ -7,14 +7,13 @@ app = Flask(__name__)
 
 @app.route('/recordmessage/', methods=['GET', 'POST'])
 def record_message():
-    xml_response = plivo.Response()
-    xml_response.addSpeak(body='Record your message after the beep. Press asterisk when done')
+    response = plivo.XML.Response()
+    response.addSpeak(body='Record your message after the beep. Press asterisk when done')
     #xml_response.addPlay(body='http://server/sound/file/url/')
-    xml_response.addRecord(action='http://' + request.environ['SERVER_NAME'] + '/getrecording/', method='GET', maxLength=60, finishOnKey='*')
-    xml_response.addSpeak(body='Recording not received')
-    response = make_response(xml_response.to_xml())
-    response.headers["Content-type"] = "text/xml"
-    return response
+    response.addRecord(action='http://' + request.environ['SERVER_NAME'] + '/getrecording/', method='GET', maxLength=60, finishOnKey='*')
+    response.addSpeak(body='Recording not received')
+    xml_response = Response(response.to_xml(),mimetype='text/xml')
+    return xml_response
 
 @app.route('/getrecording/', methods=['GET', 'POST'])
 def get_recording():
