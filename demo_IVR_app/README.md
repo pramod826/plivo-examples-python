@@ -15,10 +15,10 @@ let say heroku app link :`<heroku_app>`
 Use folowing xml in answer_url:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 <Response>
-  <Speak> Hi , welcome To Plivo. Please Press a digit to test the get digit application </Speak>Speak>
-    <GetDigits action="<heroku_app>/getdigits" method="POST">
-      </heroku_app>GetDigits>
-      </GetDigits>Response>
-      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <Speak> Hi , welcome To Plivo. Please Press a digit to test the get digit application </Speak>
+  <GetDigits action="<heroku_app>/getdigits" method="POST">
+  </GetDigits>
+</Response>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 method can be both `GET` and `POST`
